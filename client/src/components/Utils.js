@@ -16,6 +16,22 @@ export const dateParser = (dateIn) => {
    return dateOut.toString()
 }
 
+export const timestampParser = (dateIn) => {
+   let options = {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+   }
+
+   let date = new Date(dateIn).toLocaleDateString("fr-FR", options)
+
+   return date.toString()
+} 
+
 export const isEmpty = (value) => {
    return (
       value === undefined ||
@@ -28,3 +44,5 @@ export const isEmpty = (value) => {
 export const isNotEmpty = (value) => {
     return !isEmpty(value)
 }
+
+
