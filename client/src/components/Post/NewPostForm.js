@@ -11,6 +11,7 @@ const NewPostForm = () => {
     const [video, setVideo] = useState("")
     const [file, setFile] = useState()
     const userData = useSelector((state) => state.userReducer)
+    const error = useSelector((state) => state.errorReducer.postErrors)
     const dispatch = useDispatch()
 
     const handlePost = async () => {
@@ -36,24 +37,23 @@ const NewPostForm = () => {
         setVideo("")
     }
 
-    const handleVideo = () => {
-        let findLink = message.split(" ")
-        for (let i = 0; i < findLink.length; i++) {
-            if (
-                findLink[i].includes("https://www.yout") ||
-                findLink[i].includes("https://yout")
-            ) {
-                let embed = findLink[i].replace("watch?v=", "embed/")
-                setVideo(embed.split("&")[0])
-                findLink.splice(i, 1)
-                setMessage(findLink.join(" "))
-                setPostPicture("")
-            }
-        }
-    }
-
     useEffect(() => {
         if (isNotEmpty(userData)) setIsLoading(false)
+        const handleVideo = () => {
+            let findLink = message.split(" ")
+            for (let i = 0; i < findLink.length; i++) {
+                if (
+                    findLink[i].includes("https://www.yout") ||
+                    findLink[i].includes("https://yout")
+                ) {
+                    let embed = findLink[i].replace("watch?v=", "embed/")
+                    setVideo(embed.split("&")[0])
+                    findLink.splice(i, 1)
+                    setMessage(findLink.join(" "))
+                    setPostPicture("")
+                }
+            }
+        }
         handleVideo()
     }, [userData, message, video])
 
@@ -163,6 +163,8 @@ const NewPostForm = () => {
                                     </button>
                                 )}
                             </div>
+                            {isNotEmpty(error.format) && <p>{error.format}</p>}
+                            {isNotEmpty(error.maxSize) && <p>{error.maxSize}</p>}
                             <div className="btn-send">
                                 {message || postPicture || video.length > 20 ? (
                                     <button
